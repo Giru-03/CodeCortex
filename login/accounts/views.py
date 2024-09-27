@@ -13,7 +13,6 @@ import pandas as pd # type: ignore
 import hashlib
 from datetime import datetime
 import random
-from django.contrib.auth.decorators import login_required
 
 
 class NoteListCreate(generics.ListCreateAPIView):
@@ -99,7 +98,6 @@ class PredictFraudView(APIView):
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-@login_required
 @api_view(['POST'])
 def create_transaction(request):
     user = request.user
@@ -110,7 +108,8 @@ def create_transaction(request):
     datetime_str = request.data.get('datetime')
 
     # Convert string to datetime object
-    trans_datetime = datetime.strptime(datetime_str, '%Y-%m-%d %H:%M')
+    trans_datetime = datetime.strptime(datetime_str, '%Y-%m-%dT%H:%M')
+
 
     # Calculate blockchain hash (simple hash for example purposes)
     blockchain_hash = hashlib.sha256(f"{amount}{zip_code}{category}{cc_num}{datetime_str}".encode()).hexdigest()
@@ -132,8 +131,6 @@ def create_transaction(request):
 
     return Response({'message': 'Transaction created successfully'}, status=status.HTTP_201_CREATED)
 
-
-@login_required
 @api_view(['GET', 'DELETE'])
 def transactions(request, pk=None):
     user = request.user

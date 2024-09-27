@@ -16,7 +16,7 @@ class Note(models.Model):
 class Transaction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    zip_code = models.IntegerField()
+    zip_code = models.IntegerField(default=00000)
     category = models.CharField(max_length=100, default="uncategorized")
     cc_num = models.CharField(max_length=16, default="0000000000000000")
     trans_day = models.IntegerField(default=datetime.datetime.now().day)
